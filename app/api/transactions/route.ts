@@ -2,12 +2,23 @@ import { auth, currentUser } from "@clerk/nextjs/server";
 import snap from "@/lib/midtrans";
 import { redirect } from "next/navigation";
 
+export async function OPTIONS() {
+  return new Response(null, {
+    status: 204,
+    headers: {
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, OPTIONS",
+      "Access-Control-Allow-Headers": "Content-Type, Authorization",
+    },
+  });
+}
+
 export async function POST(req: Request) {
   try {
-    const { userId } = await auth();
-    if (!userId) {
-      return redirect("/sign-in");
-    }
+    // const { userId } = await auth();
+    // if (!userId) {
+    //   return redirect("/sign-in");
+    // }
 
     const user = await currentUser();
 
@@ -31,7 +42,12 @@ export async function POST(req: Request) {
           redirect_url: transaction.redirect_url,
         },
       },
-      { status: 200 }
+      {
+        status: 200,
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+        },
+      }
     );
   } catch (error) {
     console.error(error);
@@ -40,7 +56,12 @@ export async function POST(req: Request) {
         message: "Failed to create transaction",
         error: error instanceof Error ? error.message : "Unknown error",
       },
-      { status: 500 }
+      {
+        status: 500,
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+        },
+      }
     );
   }
 }
