@@ -15,10 +15,10 @@ export async function OPTIONS() {
 
 export async function POST(req: Request) {
   try {
-    // const { userId } = await auth();
-    // if (!userId) {
-    //   return redirect("/sign-in");
-    // }
+    const { userId } = await auth();
+    if (!userId) {
+      return redirect("/sign-in");
+    }
 
     const user = await currentUser();
 
